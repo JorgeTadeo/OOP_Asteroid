@@ -21,6 +21,14 @@ public class GameWorld extends Observable implements IGameWorld{
 	//	gameObjects = new GameCollection();
 	//	this.init();
 	}
+
+	
+	
+	//This method will be called by MapView to update mapview
+	public void printMap() {
+		// TODO Auto-generated method stub
+		
+	}
 	
 	
 }

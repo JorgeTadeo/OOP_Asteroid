@@ -15,12 +15,12 @@ public class Game extends Form{
 	 * Constructor
 	 */
 	public Game() {
-		//gw = new GameWorld();  //Create "Observable" 
-		//mv = new MapView();    //Create "Observer"
-	//	pv = new PointsView(); //Create "Observer"
+		gw = new GameWorld();  //Create "Observable" 
+		mv = new MapView();    //Create "Observer"
+		pv = new PointsView(); //Create "Observer"
 		
-		//gw.addObserver(mv); //Register mv 
-	//	gw.addObserver(pv); //Register pv 
+		gw.addObserver(mv); //Register mv 
+		gw.addObserver(pv); //Register pv 
 		
 		
 		/*
