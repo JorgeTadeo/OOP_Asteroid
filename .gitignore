@@ -1,15 +1,7 @@
 
 
 # CN1 stuff 
-*.classpath
-*.props
-*.xml
-*.properties
-*.settings
-*.res
-*.png
-*.launch
-*.project
+
 
 
 # Compiled class file
@@ -25,7 +17,7 @@
 .mtj.tmp/
 
 # Package Files #
-*.jar
+#*.jar
 *.war
 *.nar
 *.ear
