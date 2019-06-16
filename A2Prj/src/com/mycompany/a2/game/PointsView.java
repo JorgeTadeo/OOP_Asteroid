@@ -28,11 +28,11 @@ public class PointsView extends Container implements Observer {
 		
 		//Adding a container with boxlayout 
 		Container myContainer = new Container();
-		myContainer.setLayout(new BoxLayout(BoxLayout.X_AXIS));
+		//myContainer.setLayout(new BoxLayout(BoxLayout.X_AXIS));
 		
 		//Adding all labels in order 
-		myContainer.add(pointsTextLabel);
-		this.add(myContainer);
+	//	myContainer.add(pointsTextLabel);
+		//this.add(myContainer);
 	}
 	
 	

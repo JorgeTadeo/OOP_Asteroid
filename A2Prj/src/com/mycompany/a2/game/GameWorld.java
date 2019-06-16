@@ -10,7 +10,7 @@ public class GameWorld extends Observable implements IGameWorld{
 	/*
 	 * Fields 
 	 */
-	private GameCollection gameObjects;
+	//private GameCollection gameObjects;
 	
 	private boolean soundON;
 	
@@ -18,8 +18,8 @@ public class GameWorld extends Observable implements IGameWorld{
 	 * Constructor
 	 */
 	public GameWorld() {
-		gameObjects = new GameCollection();
-		this.init();
+	//	gameObjects = new GameCollection();
+	//	this.init();
 	}
 	
 	
