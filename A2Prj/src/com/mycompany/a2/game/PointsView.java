@@ -18,17 +18,30 @@ public class PointsView extends Container implements Observer {
 	 * Fields 
 	 */
 	private Label pointsValueLabel;
+	private Label missileValueLabel;
+	private Label gameTickValueLabel;
+	private GameWorld gw;
 	
 	
 	/*
 	 * Constructor
 	 */
-	public PointsView() {
+	public PointsView(GameWorld myGW) {
 		
 		// Points Label setup
 		Label pointsTextLabel = new Label("Points:"); 	
 		pointsTextLabel.getAllStyles().setFgColor(ColorUtil.rgb(0,0,255)); 		 
 		pointsValueLabel = new Label("XXX");  		
+		
+		//# of missile setup 
+		Label numMissileTextLabel = new Label("Missiles Left:");
+		numMissileTextLabel.getAllStyles().setFgColor(ColorUtil.rgb(0,0,255)); 	
+		missileValueLabel = new Label("XXX");
+		
+		//Time  setup 
+		Label gameTickTextLabel = new Label("Time:");
+		gameTickTextLabel.getAllStyles().setFgColor(ColorUtil.rgb(0,0,255)); 
+		gameTickValueLabel = new Label("0");
 		
 		//Adding a container with Box Layout 
 		Container myContainer = new Container();
@@ -37,6 +50,10 @@ public class PointsView extends Container implements Observer {
 		//Add labels to container 
 		myContainer.add(pointsTextLabel);
 		myContainer.add(pointsValueLabel);
+		myContainer.add(numMissileTextLabel);
+		myContainer.add(missileValueLabel);
+		myContainer.add(gameTickTextLabel);
+		myContainer.add(gameTickValueLabel);
 		
 		//Add container to PointsView content pane
 		this.add(myContainer);
@@ -47,11 +64,15 @@ public class PointsView extends Container implements Observer {
 
 	
 	@Override
-	public void update(Observable observable, Object data) {
+	public void update(Observable observable, Object data) { //data is proxy , observable is real gw 
+		//TODO Update playerscore , timer .. and other pointView related data
 		IGameWorld gw = (IGameWorld) data;
-		//this.pointsValueLabel.setText("" + gw.getPlayerScore());
-		//TODO Update more stuff about gameworld
-		//this.repaint();
+		this.pointsValueLabel.setText("" + gw.getPlayerScore());
+		this.missileValueLabel.setText("" + gw.getPSMissileCount());
+		this.gameTickValueLabel.setText("" + gw.getGameTime());
+		
+		System.out.println("PointView Updated...");
+		this.repaint();
 	}
 
 }

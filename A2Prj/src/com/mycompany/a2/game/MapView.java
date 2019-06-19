@@ -38,7 +38,12 @@ public class MapView extends Container implements Observer{
 	
 	@Override
 	public void update(Observable observable, Object data) {
-		((GameWorld)observable).printMap();
+	//	((GameWorld)observable).printMap();
+	//	System.out.println("Update was invoked in MapView");
+		IGameWorld gw = (IGameWorld) data;
+		gw.printMap();
+		this.repaint();
+	
 	}
 
 	
