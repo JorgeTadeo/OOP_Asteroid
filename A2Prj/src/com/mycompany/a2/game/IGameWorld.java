@@ -36,5 +36,6 @@ public interface IGameWorld {
 	void turnPSLeft();
 	void turnPSRight();
 	void jumpToHyperSpace();
+	void setSound(boolean b);
 	
 }

@@ -224,4 +224,11 @@ public class GameWorldProxy extends Observable implements IGameWorld {
 		return gw.getPSMissileCount();
 	}
 
+
+
+	@Override
+	public void setSound(boolean b) {
+		gw.setSound(b);	
+	}
+
 }

@@ -35,7 +35,7 @@ public class GameWorld extends Observable implements IGameWorld{
 	private int psCount;
 	private int npsCount;
 	private int stationCount;
-	private boolean soundON;
+	private boolean soundOn;
 	
 	/*
 	 * Constructor
@@ -64,6 +64,7 @@ public class GameWorld extends Observable implements IGameWorld{
 		this.psCount = 0;
 		this.npsCount = 0;
 		this.stationCount = 0;
+		this.soundOn = false;
 	}
 	
 	
@@ -309,7 +310,7 @@ public class GameWorld extends Observable implements IGameWorld{
 			if(obj instanceof PlayerShip) {
 				PlayerShip ps = (PlayerShip) obj;
 				ps.getMl().turnLeft();
-				System.out.println("PlayerShip rotated left by 1 degree");
+				System.out.println("MissileLauncher rotated left by 1 degree");
 				System.out.println(ps.toString());
 				this.setChanged();
 				this.notifyObservers(new GameWorldProxy(this));
@@ -337,7 +338,7 @@ public class GameWorld extends Observable implements IGameWorld{
 			if(obj instanceof PlayerShip) {
 				PlayerShip ps = (PlayerShip) obj;
 				ps.getMl().turnRight();
-				System.out.println("PlayerShip rotated right by 1 degree");
+				System.out.println("MissileLauncher rotated right by 1 degree");
 				System.out.println(ps.toString());
 				this.setChanged();
 				this.notifyObservers(new GameWorldProxy(this));
@@ -915,10 +916,15 @@ public class GameWorld extends Observable implements IGameWorld{
 				((PlayerShip) obj).resetPosition();;
 				this.setChanged();
 				this.notifyObservers(new GameWorldProxy(this));
+				System.out.println("PlayerShip jumped through hyperspace");
 				return;
 			}
 		}
 		System.out.println("There exists no playership to jump through hyperspace");		
+	}
+	@Override
+	public void setSound(boolean b) {
+		this.soundOn = b;
 	}
 	
 	

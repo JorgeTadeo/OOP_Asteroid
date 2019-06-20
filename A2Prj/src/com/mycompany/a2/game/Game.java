@@ -2,6 +2,8 @@ package com.mycompany.a2.game;
 
 import com.codename1.charts.util.ColorUtil;
 import com.codename1.ui.Button;
+import com.codename1.ui.CheckBox;
+import com.codename1.ui.Command;
 import com.codename1.ui.Component;
 import com.codename1.ui.Container;
 import com.codename1.ui.Form;
@@ -27,6 +29,7 @@ import com.mycompany.a2.command.CommandNonPlayerShipFireMissile;
 import com.mycompany.a2.command.CommandPlayerShipFireMissile;
 import com.mycompany.a2.command.CommandPrintMap;
 import com.mycompany.a2.command.CommandReloadPlayerShipMissile;
+import com.mycompany.a2.command.CommandSoundToggle;
 import com.mycompany.a2.command.CommandTick;
 import com.mycompany.a2.command.CommandTurnMissileLauncherLeft;
 import com.mycompany.a2.command.CommandTurnMissileLauncherRight;
@@ -67,6 +70,18 @@ public class Game extends Form{
 		Toolbar toolBar = new Toolbar();
 		Toolbar.setOnTopSideMenu(false);
 		setToolbar(toolBar);
+		
+		//Toolbar Menu Items 
+		CheckBox soundCheckBox = new CheckBox();
+		soundCheckBox.getAllStyles().setBgTransparency(255);
+		soundCheckBox.getUnselectedStyle().setBgColor(ColorUtil.rgb(0, 150, 150));
+		soundCheckBox.getAllStyles().setFgColor(ColorUtil.rgb(255, 255, 255));
+		soundCheckBox.getAllStyles().setPadding(TOP, 5);
+		soundCheckBox.getAllStyles().setPadding(BOTTOM, 5);
+		
+		//Command Listener for sound checkbox 
+		soundCheckBox.setCommand(new CommandSoundToggle(gw));
+		toolBar.addComponentToSideMenu(soundCheckBox);
 		
 		//Buttons 
 		Button addAsteroidButton = new Button("newAsteroidButton");
