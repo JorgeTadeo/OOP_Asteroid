@@ -3,15 +3,11 @@ package com.mycompany.a2.game;
 import com.codename1.charts.util.ColorUtil;
 import com.codename1.ui.Button;
 import com.codename1.ui.CheckBox;
-import com.codename1.ui.Command;
-import com.codename1.ui.Component;
 import com.codename1.ui.Container;
 import com.codename1.ui.Form;
-import com.codename1.ui.Label;
 import com.codename1.ui.Toolbar;
 import com.codename1.ui.layouts.BorderLayout;
 import com.codename1.ui.layouts.BoxLayout;
-import com.codename1.ui.plaf.Border;
 import com.mycompany.a2.command.CommandAbout;
 import com.mycompany.a2.command.CommandAddAsteroid;
 import com.mycompany.a2.command.CommandAddNonPlayerShip;
@@ -75,7 +71,7 @@ public class Game extends Form{
 		Toolbar toolBar = new Toolbar();
 		Toolbar.setOnTopSideMenu(false);
 		setToolbar(toolBar);
-		
+
 		//Toolbar Menu Items 
 		CheckBox soundCheckBox = new CheckBox();
 		soundCheckBox.getAllStyles().setBgTransparency(255);
@@ -131,9 +127,7 @@ public class Game extends Form{
 		saveButton.setCommand(new CommandSave(gw));
 		undoButton.setCommand(new CommandUndo(gw));
 		
-		//keybinding for side menu bar 
-		addKeyListener('q', new CommandQuit(gw));
-		
+
 		toolBar.addComponentToSideMenu(soundCheckBox);
 		toolBar.addComponentToSideMenu(quitButton);
 		toolBar.addComponentToSideMenu(aboutButton);
@@ -141,6 +135,13 @@ public class Game extends Form{
 		toolBar.addComponentToSideMenu(saveButton);
 		toolBar.addComponentToSideMenu(undoButton);
 		
+		//keybinding for side menu bar 
+		this.addKeyListener('z', quitButton.getCommand());
+
+
+
+		
+		setToolbar(toolBar);
 		
 		
 		
@@ -241,7 +242,6 @@ public class Game extends Form{
 		addKeyListener('x', new CommandKillAsteroidByAsteroid(gw));
 		addKeyListener('I', new CommandKillNonPlayerShipByAsteroid(gw));
 		addKeyListener('t', new CommandTick(gw));
-		
 		
 		
 		leftContainer.add(addAsteroidButton);
