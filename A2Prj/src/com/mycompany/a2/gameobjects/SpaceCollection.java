@@ -74,5 +74,9 @@ public class SpaceCollection  implements ICollection{
 			gameObjects.set(index, null);
 		}
 		
+		
 	}
+
+
+
 }

@@ -5,6 +5,9 @@ import java.util.Observer;
 
 import com.codename1.charts.util.ColorUtil;
 import com.codename1.ui.Container;
+import com.codename1.ui.Label;
+import com.codename1.ui.TextArea;
+import com.mycompany.a2.gameobjects.IIterator;
 
 /*
  * 1 of 2 Observer that observes GameWorld
@@ -16,14 +19,22 @@ public class MapView extends Container implements Observer{
 	private int mapViewHeight;
 	private int mapViewWidth;
 	
+	private GameWorld gw;
+	private TextArea mapValueTextArea;
 	/*
 	 * Constructor
 	 */
-	public MapView() {
+	public MapView(GameWorld myGW) {
 		this.mapViewHeight = this.getHeight();
 		this.mapViewWidth = this.getWidth();
-		
+		this.gw = myGW;
 		this.getAllStyles().setFgColor(ColorUtil.rgb(0, 0, 255));
+		
+		mapValueTextArea = new TextArea();
+		this.add(mapValueTextArea);
+		mapValueTextArea.setEditable(false);
+		mapValueTextArea.setFocusable(false);
+
 	}
 	
 	
@@ -38,11 +49,19 @@ public class MapView extends Container implements Observer{
 	
 	@Override
 	public void update(Observable observable, Object data) {
-	//	((GameWorld)observable).printMap();
-	//	System.out.println("Update was invoked in MapView");
+		
+
 		IGameWorld gw = (IGameWorld) data;
-		gw.printMap();
+		mapValueTextArea.setText("");
+		
+		IIterator iter = gw.getGameObjectIterator();
+		while(iter.hasNext()) {
+			mapValueTextArea.setText(mapValueTextArea.getText() + "\n" + iter.getNext());
+		}
+		
+		
 		this.repaint();
+		
 	
 	}
 

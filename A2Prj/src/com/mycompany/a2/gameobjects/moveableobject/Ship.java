@@ -19,6 +19,8 @@ public abstract class Ship extends MoveableObject {
 	
 
 	public void reload() {
+		if(missileCount == MAX_MISSILE_COUNT) 
+			return;
 		missileCount = MAX_MISSILE_COUNT;
 	}
 	

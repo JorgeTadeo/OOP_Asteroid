@@ -7,10 +7,12 @@ import com.codename1.ui.Command;
 import com.codename1.ui.Component;
 import com.codename1.ui.Container;
 import com.codename1.ui.Form;
+import com.codename1.ui.Label;
 import com.codename1.ui.Toolbar;
 import com.codename1.ui.layouts.BorderLayout;
 import com.codename1.ui.layouts.BoxLayout;
 import com.codename1.ui.plaf.Border;
+import com.mycompany.a2.command.CommandAbout;
 import com.mycompany.a2.command.CommandAddAsteroid;
 import com.mycompany.a2.command.CommandAddNonPlayerShip;
 import com.mycompany.a2.command.CommandAddPlayerShip;
@@ -25,16 +27,20 @@ import com.mycompany.a2.command.CommandKillPlayerShipByAsteroid;
 import com.mycompany.a2.command.CommandKillPlayerShipByMissile;
 import com.mycompany.a2.command.CommandKillPlayerShipByNonPlayerShip;
 import com.mycompany.a2.command.CommandKillsAsteroidByPSMissile;
+import com.mycompany.a2.command.CommandNew;
 import com.mycompany.a2.command.CommandNonPlayerShipFireMissile;
 import com.mycompany.a2.command.CommandPlayerShipFireMissile;
 import com.mycompany.a2.command.CommandPrintMap;
+import com.mycompany.a2.command.CommandQuit;
 import com.mycompany.a2.command.CommandReloadPlayerShipMissile;
+import com.mycompany.a2.command.CommandSave;
 import com.mycompany.a2.command.CommandSoundToggle;
 import com.mycompany.a2.command.CommandTick;
 import com.mycompany.a2.command.CommandTurnMissileLauncherLeft;
 import com.mycompany.a2.command.CommandTurnMissileLauncherRight;
 import com.mycompany.a2.command.CommandTurnPlayerShipLeft;
 import com.mycompany.a2.command.CommandTurnPlayerShipRight;
+import com.mycompany.a2.command.CommandUndo;
 
 public class Game extends Form{
 
@@ -53,18 +59,17 @@ public class Game extends Form{
 		gw = GameWorld.getInstance();  //Create "Observable" 
 		gw.init();
 		gwProxy = new GameWorldProxy(gw);
-		mv = new MapView();    //Create "Observer"
+		mv = new MapView(gw);    //Create "Observer"
 		pv = new PointsView(gw); //Create "Observer"
 		
-		//gw.gwProxy.addObserver(mv); //Register mv   ?????
+
 		gw.addObserver(mv); //Register mv 
 		gw.addObserver(pv); //Register pv 
 		
 		
-		//Game UI setup  
+		//Game UI layout setup  
 		setLayout(new BorderLayout());
-		add(BorderLayout.NORTH , pv);
-		add(BorderLayout.CENTER,mv);
+
 		
 		//Toolbar 
 		Toolbar toolBar = new Toolbar();
@@ -79,9 +84,65 @@ public class Game extends Form{
 		soundCheckBox.getAllStyles().setPadding(TOP, 5);
 		soundCheckBox.getAllStyles().setPadding(BOTTOM, 5);
 		
-		//Command Listener for sound checkbox 
+
+		
+		Button quitButton = new Button("quitButton");
+		quitButton.getAllStyles().setBgTransparency(255);
+		quitButton.getUnselectedStyle().setBgColor(ColorUtil.rgb(0, 150, 150));
+		quitButton.getAllStyles().setFgColor(ColorUtil.rgb(255, 255, 255));
+		quitButton.getAllStyles().setPadding(TOP, 5);
+		quitButton.getAllStyles().setPadding(BOTTOM, 5);
+		
+		Button aboutButton = new Button();
+		aboutButton.getAllStyles().setBgTransparency(255);
+		aboutButton.getUnselectedStyle().setBgColor(ColorUtil.rgb(0, 150, 150));
+		aboutButton.getAllStyles().setFgColor(ColorUtil.rgb(255, 255, 255));
+		aboutButton.getAllStyles().setPadding(TOP, 5);
+		aboutButton.getAllStyles().setPadding(BOTTOM, 5);
+		
+		Button newButton = new Button();
+		newButton.getAllStyles().setBgTransparency(255);
+		newButton.getUnselectedStyle().setBgColor(ColorUtil.rgb(0, 150, 150));
+		newButton.getAllStyles().setFgColor(ColorUtil.rgb(255, 255, 255));
+		newButton.getAllStyles().setPadding(TOP, 5);
+		newButton.getAllStyles().setPadding(BOTTOM, 5);
+		
+		Button saveButton = new Button();
+		saveButton.getAllStyles().setBgTransparency(255);
+		saveButton.getUnselectedStyle().setBgColor(ColorUtil.rgb(0, 150, 150));
+		saveButton.getAllStyles().setFgColor(ColorUtil.rgb(255, 255, 255));
+		saveButton.getAllStyles().setPadding(TOP, 5);
+		saveButton.getAllStyles().setPadding(BOTTOM, 5);
+		
+		Button undoButton = new Button();
+		undoButton.getAllStyles().setBgTransparency(255);
+		undoButton.getUnselectedStyle().setBgColor(ColorUtil.rgb(0, 150, 150));
+		undoButton.getAllStyles().setFgColor(ColorUtil.rgb(255, 255, 255));
+		undoButton.getAllStyles().setPadding(TOP, 5);
+		undoButton.getAllStyles().setPadding(BOTTOM, 5);
+		
+		
+		
+		//Command Listener for checkboxes and buttons 
 		soundCheckBox.setCommand(new CommandSoundToggle(gw));
+		quitButton.setCommand(new CommandQuit(gw));
+		aboutButton.setCommand(new CommandAbout(gw));
+		newButton.setCommand(new CommandNew(gw));
+		saveButton.setCommand(new CommandSave(gw));
+		undoButton.setCommand(new CommandUndo(gw));
+		
+		//keybinding for side menu bar 
+		addKeyListener('q', new CommandQuit(gw));
+		
 		toolBar.addComponentToSideMenu(soundCheckBox);
+		toolBar.addComponentToSideMenu(quitButton);
+		toolBar.addComponentToSideMenu(aboutButton);
+		toolBar.addComponentToSideMenu(newButton);
+		toolBar.addComponentToSideMenu(saveButton);
+		toolBar.addComponentToSideMenu(undoButton);
+		
+		
+		
 		
 		//Buttons 
 		Button addAsteroidButton = new Button("newAsteroidButton");
@@ -134,9 +195,14 @@ public class Game extends Form{
 		jumpButton.getAllStyles().setPadding(TOP, 5);
 		jumpButton.getAllStyles().setPadding(BOTTOM, 5);
 		
-
+		addAsteroidButton.setFocusable(false);
+		addNPSButton.setFocusable(false);
+		addSpaceStationButton.setFocusable(false);
+		addPlayerShipButton.setFocusable(false);
+		jumpButton.setFocusable(false);
+		playerShipFireButton.setFocusable(false);
 		
-		
+	
 		//Command Container 
 		Container leftContainer = new Container(new BoxLayout(BoxLayout.Y_AXIS));
 		
@@ -185,32 +251,27 @@ public class Game extends Form{
 		leftContainer.add(playerShipFireButton);
 		leftContainer.add(jumpButton);
 		
-		leftContainer.add(mapButton);
+		//leftContainer.add(mapButton);
 		
-		//Center Container 
-		Container centerContainer = new Container();
-		centerContainer.getAllStyles().setBorder(Border.createLineBorder(4,ColorUtil.rgb(255, 0, 0)));
-		centerContainer.getAllStyles().setPadding(Component.LEFT, 20);
+		
+		
+		
+
 		
 		
 		
 		
 		
 		//Add everything to content pane 
+		
+		//leftContainer.setFocusable(false);
+		this.setFocusable(false);
 
 		add(BorderLayout.WEST, leftContainer);
-		add(BorderLayout.CENTER, centerContainer);
+		add(BorderLayout.NORTH , pv);
+		add(BorderLayout.CENTER,mv);
+
 		
-		
-		/*
-		 * TODO
-		 * 
-		 * create menus , create command objects for each command ,
-		 * add command to command menu, create a control panel for the buttons,
-		 * add buttons to the control panel, add commands to the buttons, and 
-		 * add control panel, MapView panel, and PointsView panel to the form
-		 * 
-		 */
 		
 		this.show();
 		

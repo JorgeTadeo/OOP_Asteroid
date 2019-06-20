@@ -1,13 +1,15 @@
 package com.mycompany.a2.game;
 
-import com.mycompany.a2.gameobjects.moveableobject.PlayerShip;
+import com.mycompany.a2.gameobjects.IIterator;
 
 public interface IGameWorld {
 
 
 	int getPlayerScore();
-	public int getGameTime();
-	public int getPSMissileCount();
+	int getGameTime();
+	int getPSMissileCount();
+	int getLife();
+	
 
 	
 	
@@ -37,5 +39,8 @@ public interface IGameWorld {
 	void turnPSRight();
 	void jumpToHyperSpace();
 	void setSound(boolean b);
+	boolean getSound();
+	public IIterator getGameObjectIterator();
+
 	
 }

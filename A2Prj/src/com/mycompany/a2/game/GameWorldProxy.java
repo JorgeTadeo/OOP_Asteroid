@@ -2,6 +2,8 @@ package com.mycompany.a2.game;
 
 import java.util.Observable;
 
+import com.mycompany.a2.gameobjects.IIterator;
+
 public class GameWorldProxy extends Observable implements IGameWorld {
 
 	
@@ -229,6 +231,23 @@ public class GameWorldProxy extends Observable implements IGameWorld {
 	@Override
 	public void setSound(boolean b) {
 		gw.setSound(b);	
+	}
+	public IIterator getGameObjectIterator() {
+		// TODO Auto-generated method stub
+		return gw.getGameObjectIterator();
+
+	}
+
+
+
+	@Override
+	public int getLife() {
+		return gw.getLife();
+	}
+	
+	@Override
+	public boolean getSound() {
+		return gw.getSound();
 	}
 
 }

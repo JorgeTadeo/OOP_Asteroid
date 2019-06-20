@@ -36,6 +36,7 @@ public class GameWorld extends Observable implements IGameWorld{
 	private int npsCount;
 	private int stationCount;
 	private boolean soundOn;
+	private int life;
 	
 	/*
 	 * Constructor
@@ -65,6 +66,7 @@ public class GameWorld extends Observable implements IGameWorld{
 		this.npsCount = 0;
 		this.stationCount = 0;
 		this.soundOn = false;
+		this.life = 3;
 	}
 	
 	
@@ -143,6 +145,9 @@ public class GameWorld extends Observable implements IGameWorld{
 		this.notifyObservers(new GameWorldProxy(this));
 	}
 	
+	public IIterator getGameObjectIterator() {
+		return gameObjects.getIterator();
+	}
 	
 	public void addAsteroid() {
 		gameObjects.add(new Asteroids());
@@ -151,7 +156,7 @@ public class GameWorld extends Observable implements IGameWorld{
 		this.notifyObservers(new GameWorldProxy(this));
 	}
 	public void addPlayerShip() {
-			PlayerShip ps = PlayerShip.getInstance();
+			PlayerShip ps = PlayerShip.getInstance(psCount);
 			if(psCount == 0) {			
 				gameObjects.add(ps);
 				this.psCount = 1;
@@ -363,17 +368,21 @@ public class GameWorld extends Observable implements IGameWorld{
 		IIterator iter = gameObjects.getIterator();
 		while(iter.hasNext()) {
 			GameObject obj = iter.getNext();
-			if(obj instanceof PlayerShip) {
+			if(obj instanceof PlayerShip && this.stationCount > 0) {
 				PlayerShip ps = (PlayerShip) obj;
-				ps.reload();
-				System.out.println("PlayerShip's missile has been reloaded");
-				System.out.println(ps.toString());
-				this.setChanged();
-				this.notifyObservers(new GameWorldProxy(this));
+				if(ps.getMissileCount() == ps.getMaxMissileCount()) {
+					System.out.println("Playership already have max missile");
+				}else {
+					ps.reload();
+					System.out.println("PlayerShip's missile has been reloaded");
+					System.out.println(ps.toString());
+					this.setChanged();
+					this.notifyObservers(new GameWorldProxy(this));
+				}
 				return;
 			}
 		}
-		System.out.println("No Playership to reload");
+		System.out.println("No Playership to reload or Blinking Station is not yet created");
 	}
 	public void killAsteroid() { 
 		if(asteroidCount >= 1 && psCount == 1) {
@@ -401,7 +410,7 @@ public class GameWorld extends Observable implements IGameWorld{
 				int index = iter.getCurrIndex();
 				GameObject obj = iter.getNext();
 				if(obj instanceof Missiles) {
-					((Missiles) obj).getOwner().decrementMissile();
+				//	((Missiles) obj).getOwner().decrementMissile();
 					iter.remove(index);
 					this.playerScore += 10;
 					IIterator iter2 = gameObjects.getIterator();
@@ -528,8 +537,10 @@ public class GameWorld extends Observable implements IGameWorld{
             			int index2 = iter2.getCurrIndex();
             			GameObject obj2 = iter2.getNext();
             			if(obj2 instanceof PlayerShip) {
-                  			if(((PlayerShip) obj2).getLife() > 0) {
-                            	((PlayerShip) obj2).respawn();
+                  			if(this.life > 0) {
+                            	//((PlayerShip) obj2).respawn();
+                  				iter.remove(index2);
+                  				psCount = 0;
                             	System.out.println("PlayerShip was destroyed by NPS's Missile");
                         		this.setChanged();
                         		this.notifyObservers(new GameWorldProxy(this));
@@ -574,8 +585,11 @@ public class GameWorld extends Observable implements IGameWorld{
 				int index = iter.getCurrIndex();
 				GameObject obj = iter.getNext();
 				 if(obj instanceof PlayerShip) {
-		            	if(((PlayerShip) obj).getLife() > 0) {
-		                	((PlayerShip) obj).respawn();
+		            	if(this.life > 0) {
+		                	//((PlayerShip) obj).respawn();
+		            		this.life--;
+		            		iter.remove(index);
+		            		psCount = 0;
 		                	System.out.println("Playership is destroyed by Asteroid. Life decreased by 1");
 		            		this.setChanged();
 		            		this.notifyObservers(new GameWorldProxy(this));
@@ -645,8 +659,11 @@ public class GameWorld extends Observable implements IGameWorld{
 				int index = iter.getCurrIndex();
 				GameObject obj = iter.getNext();
 				if(obj instanceof PlayerShip) {
-	            	if(((PlayerShip) obj).getLife() > 0) {
-	                	((PlayerShip) obj).respawn();
+	            	if(this.life > 0) {
+	            		this.life--;
+	                	//((PlayerShip) obj).respawn();
+	            		iter.remove(index);
+	            		psCount = 0;
 	                	System.out.println("Playership is destroyed by NonPlayerShip. Life decreased by 1");
 	            		this.setChanged();
 	            		this.notifyObservers(new GameWorldProxy(this));
@@ -925,6 +942,18 @@ public class GameWorld extends Observable implements IGameWorld{
 	@Override
 	public void setSound(boolean b) {
 		this.soundOn = b;
+		this.setChanged();
+		this.notifyObservers(new GameWorldProxy(this));
+	}
+	
+	@Override
+	public boolean getSound() {
+		return this.soundOn;
+	}
+	
+	@Override
+	public int getLife() {
+		return this.life;
 	}
 	
 	
