@@ -9,12 +9,7 @@ public interface IGameWorld {
 	int getGameTime();
 	int getPSMissileCount();
 	int getLife();
-	
-
-	
-	
 	void printMap();
-	
 	void tick();
 	void addAsteroid();
 	void addPlayerShip();

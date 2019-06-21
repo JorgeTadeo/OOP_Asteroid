@@ -5,13 +5,12 @@ import java.util.Observer;
 
 import com.codename1.charts.util.ColorUtil;
 import com.codename1.ui.Container;
-import com.codename1.ui.Label;
 import com.codename1.ui.TextArea;
 import com.mycompany.a2.gameobjects.IIterator;
 
 /*
  * 1 of 2 Observer that observes GameWorld
- * 
+ * This is the center region of the game
  * Purpose : 
  */
 public class MapView extends Container implements Observer{
@@ -19,17 +18,18 @@ public class MapView extends Container implements Observer{
 	private int mapViewHeight;
 	private int mapViewWidth;
 	
-	private GameWorld gw;
 	private TextArea mapValueTextArea;
+	
+	
 	/*
 	 * Constructor
 	 */
 	public MapView(GameWorld myGW) {
 		this.mapViewHeight = this.getHeight();
 		this.mapViewWidth = this.getWidth();
-		this.gw = myGW;
 		this.getAllStyles().setFgColor(ColorUtil.rgb(0, 0, 255));
 		
+		//Add Component to Container
 		mapValueTextArea = new TextArea();
 		this.add(mapValueTextArea);
 		mapValueTextArea.setEditable(false);
@@ -50,7 +50,9 @@ public class MapView extends Container implements Observer{
 	@Override
 	public void update(Observable observable, Object data) {
 		
-
+		/*
+		 * Prints all gameObject using GameObjectIterator to textArea
+		 */
 		IGameWorld gw = (IGameWorld) data;
 		mapValueTextArea.setText("");
 		

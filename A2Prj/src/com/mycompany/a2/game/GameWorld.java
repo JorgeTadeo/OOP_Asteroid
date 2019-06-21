@@ -1,6 +1,5 @@
 package com.mycompany.a2.game;
 
-import java.util.ArrayList;
 import java.util.Observable;
 
 import com.mycompany.a2.gameobjects.moveableobject.Asteroids;
@@ -24,7 +23,7 @@ public class GameWorld extends Observable implements IGameWorld{
 	/*
 	 * Fields 
 	 */
-	//private GameCollection gameObjects;
+
 	
 	final private int gameWorldHeight = 1024;
 	final private int gameWorldWidth = 768;
@@ -37,11 +36,14 @@ public class GameWorld extends Observable implements IGameWorld{
 	private int stationCount;
 	private boolean soundOn;
 	private int life;
+	private boolean GameOver;
 	
 	/*
 	 * Constructor
+	 * 
+	 * NOTE : Singleton GameWorld to enforce only instance of gameworld can ever be created.
 	 */
-	//Singleton GameWorld to enforce only instance of gameworld can ever be created.
+	
 	private volatile static GameWorld gw;
 	GameWorld() {};
 	public static GameWorld getInstance() {
@@ -55,37 +57,44 @@ public class GameWorld extends Observable implements IGameWorld{
 	}
 
 	/*
-	 * Initialize Game
+	 * Initialize Game , called by Game class
 	 */
 	public void init() {
-		this.playerScore = 0;
-		this.timer = 0;
 		gameObjects = new SpaceCollection();
-		this.asteroidCount = 0;
-		this.psCount = 0;
-		this.npsCount = 0;
-		this.stationCount = 0;
-		this.soundOn = false;
-		this.life = 3;
+		playerScore = 0;
+		timer = 0;
+		asteroidCount = 0;
+		psCount = 0;
+		npsCount = 0;
+		stationCount = 0;
+		soundOn = false;
+		life = 3;
+		GameOver = false;
 	}
 	
 	
+	/*******************************
+	 * Observer helper functions : *
+	 *******************************/
+	
+	/*
+	 * Returns player score
+	 */
 	public int getPlayerScore() {
-		return this.playerScore;	
+		return playerScore;	
 	}
 	
+	/*
+	 * Returns game timer
+	 */
 	public int getGameTime() {
-		return this.timer;
+		return timer;
 	}
 	
+	/*
+	 * Returns remain missile count of playership ,  0 if playership does not exist. 
+	 */
 	public int getPSMissileCount() {
-		/*
-		for(int i = 0 ; i < gameObjects.size(); i++) {
-			if(gameObjects.get(i) instanceof PlayerShip) {
-				return ((PlayerShip)gameObjects.get(i)).getMissileCount();
-			}
-		}
-		*/
 		IIterator iter = gameObjects.getIterator();
 		while(iter.hasNext()) {
 			GameObject obj = iter.getNext();
@@ -93,167 +102,227 @@ public class GameWorld extends Observable implements IGameWorld{
 				return ((PlayerShip)obj).getMissileCount();
 			}
 		}
+		System.out.println("There exists no playership , returned 0");
 		return 0;
 	}
 	
-	
-
 	/*
-	 * GAME METHODS :
+	 * Returns an iterator to iterate GameObjects collection
 	 */
-	
-	
-	/*
-	 * Game tick
-	 */
-	public void tick() {
-		timer++;
-		/*
-		for(int i = 0 ; i < gameObjects.size(); i++) {
-
-			if(gameObjects.get(i) instanceof Missiles) {
-				if(((Missiles) gameObjects.get(i)).getFuel() == 1) {
-					gameObjects.remove(i);
-					System.out.println("Missile out of fuel and is removed");
-					return;
-				}else {
-					((Missiles) gameObjects.get(i)).decrementFuel();
-				}
-			}
-			if(!(gameObjects.get(i) instanceof FixedObject))
-				((MoveableObject) gameObjects.get(i)).move();
-		}
-		*/
-		IIterator iter = gameObjects.getIterator();
-		while(iter.hasNext()) {
-			int index = iter.getCurrIndex();
-			GameObject obj = iter.getNext();
-			if(obj instanceof Missiles) {
-				if(((Missiles) obj).getFuel() == 1){
-					iter.remove(index);
-					System.out.println("Missile out of fuel and is removed");
-					return;
-				}else {
-					((Missiles) obj).decrementFuel();
-				}
-			}
-			if(!(obj instanceof FixedObject))
-				((MoveableObject) obj).move();
-		}
-			
-		this.setChanged();
-		this.notifyObservers(new GameWorldProxy(this));
-	}
-	
 	public IIterator getGameObjectIterator() {
 		return gameObjects.getIterator();
 	}
 	
-	public void addAsteroid() {
-		gameObjects.add(new Asteroids());
-		this.asteroidCount++;
-		this.setChanged();
-		this.notifyObservers(new GameWorldProxy(this));
-	}
-	public void addPlayerShip() {
-			PlayerShip ps = PlayerShip.getInstance(psCount);
-			if(psCount == 0) {			
-				gameObjects.add(ps);
-				this.psCount = 1;
+
+	
+	
+	/********************
+	 * IN GAME METHODS  *
+	 ********************/
+	
+	
+	/*
+	 * Game tick : 
+	 * 
+	 * 	PostCondition : game timer increments by 1 tick. All gameObject should reflect changes.
+	 */
+	public void tick() {
+		
+		IIterator iter = gameObjects.getIterator();
+	
+		while(iter.hasNext()) {
+			
+			int ptr = iter.getCurrIndex();
+			GameObject obj = iter.getNext();
+			
+			//If is a missile with 1 fuel left
+			if(obj instanceof Missiles && ((Missiles) obj).getFuel() == 1 ) {
+				iter.remove(ptr);
+				System.out.println("Missile out of fuel and is removed");
+			//If is a missile with more than 1 fuel left
+			}else if(obj instanceof Missiles && ((Missiles) obj).getFuel() != 1) {
+				((Missiles) obj).decrementFuel();
+			//If is a moveable object
+			}else if(!(obj instanceof FixedObject)) {
+				((MoveableObject) obj).move();
+			//Not a moveable object , no change.
+			}else {
+				continue;
 			}
 			this.setChanged();
 			this.notifyObservers(new GameWorldProxy(this));
+		}//END WHILE 
+		
+		timer++;
 	}
+	
+	
+	/*
+	 * Adds asteroid to game 
+	 * 	PreCondition : life is not 0 / GameOver is not over
+	 * 	PostCondition : Asteroid is added to gameObjects and all observers are notified
+	 */
+	public void addAsteroid() {
+		
+		if(GameOver) {
+			System.out.println("Unable to add Asteroid , GameOver already...");
+			return;
+		}
+		
+		gameObjects.add(new Asteroids());
+		this.asteroidCount++;
+		this.setChanged();
+		this.notifyObservers(new GameWorldProxy(this));	
+	}
+	
+	
+	
+	/*
+	 * Adds PlayerShip to game
+	 * 	PreCondition : life is not 0 / Game is not over
+	 * 	PostCondition : Playership added to gameObjects and notify observers
+	 */
+	public void addPlayerShip() {
+		
+		if(GameOver) {
+			System.out.println("Unable to add PlayerShip , GameOver already...");
+			return;
+		}
+		
+		if(PlayerShip.isDead()) {
+			gameObjects.add(PlayerShip.getInstance(psCount));
+			this.psCount = 1;
+			this.setChanged();
+			this.notifyObservers(new GameWorldProxy(this));
+			return;
+		}else {
+			System.out.println("PlayerShip Already Exists...");
+		}
+	}
+	
+	
+	/*
+	 * Adds Non-PlayerShip to game
+	 * 	PreCondition : life is not 0 / Game is not over
+	 * 	PostCondition : Non-Playership added to gameObjects and notify observers
+	 */
 	public void addNonPlayerShip() {
+		
+		if(GameOver) {
+			System.out.println("Unable to add Non-PlayerShip , GameOver already...");
+			return;
+		}
+		
 		gameObjects.add(new NonPlayerShip());
 		this.npsCount++;
 		this.setChanged();
 		this.notifyObservers(new GameWorldProxy(this));
 	}
+	
+	
+	/*
+	 * Adds Blinking Space Station to game
+	 * 	PreCondition : life is not 0 / Game is not over
+	 * 	PostCondition : Blinking Space Station added to gameObjects and notify observers
+	 */
 	public void addSpaceStation() {
+		
+		if(GameOver) {
+			System.out.println("Unable to add Blinking Space Station , GameOver already...");
+			return;
+		}	
 		gameObjects.add(new SpaceStation());
 		this.stationCount++;
 		this.setChanged();
 		this.notifyObservers(new GameWorldProxy(this));
 	}
-	public void addPlayerMissile() {	
-		/*
-		for(int i = 0 ; i < gameObjects.size(); i++) {
-			if(gameObjects.get(i) instanceof PlayerShip ) {
-				if(((Ship) gameObjects.get(i)).getMissileCount() > 0 ) {
-					gameObjects.add(new Missiles((PlayerShip) gameObjects.get(i)));
-					//Print Fired Missile
-					System.out.println("Player ship fired missile");
-					System.out.println(((Ship)gameObjects.get(i)).getMissileCount() + " missiles left");
-					this.setChanged();
-					this.notifyObservers(new GameWorldProxy(this));
-				}else {
-					//Print Ran out of missile 
-					System.out.println("Player ship ran out of missile");
-				}
-				return;
-			}
-		}
-		*/
-		IIterator iter = gameObjects.getIterator();
-		while(iter.hasNext()) {
-			GameObject obj = iter.getNext();
-			if(obj instanceof PlayerShip) {
-				if(((PlayerShip) obj).getMissileCount() > 0) {
-					gameObjects.add(new Missiles((PlayerShip) obj));
-					System.out.println("Player ship fired missile");
-					System.out.println(((PlayerShip) obj).getMissileCount() + " missiles left");
-					this.setChanged();
-					this.notifyObservers(new GameWorldProxy(this));
-				}else {
-					System.out.println("Player ship ran out of missile");
-				}
-				return;
-			}
-		}
-		//No PlayerShip
-		System.out.println("There exists no playership to fire missile");
-		return;
 	
-	}
-	public void addNonPlayerMissile() {
-		/*
-		for(int i = 0 ; i < gameObjects.size(); i++) {
-			if(gameObjects.get(i) instanceof NonPlayerShip ) {
-				if(((Ship) gameObjects.get(i)).getMissileCount() > 0) {
-					gameObjects.add(new Missiles((NonPlayerShip) gameObjects.get(i)));
-					System.out.println("Non-Player ship fired missile");
-					System.out.println(((Ship)gameObjects.get(i)).getMissileCount() + " missiles left");
-					this.setChanged();
-					this.notifyObservers(new GameWorldProxy(this));
-				}else {
-					System.out.println("Non-Player ship ran out of missile");
-				}
-				return;
-			}
+	
+	/*
+	 * Adds Player Missile to game
+	 * 	PreCondition : life is not 0 / Game is not over && PlayerShip Exists && PlayerShip ML Exists && enough ammo
+	 * 	PostCondition : PlayerShip Missile added to gameObjects and notify observers
+	 */
+	public void addPlayerMissile() {	
+		if(GameOver) {
+			System.out.println("Unable to fire playership missile , GameOver already...");
+			return;
+		}	
+		if(psCount != 1) {
+			System.out.println("Unable to fire missile , Playership does not exist.");
+			return;
 		}
-		*/
 		IIterator iter = gameObjects.getIterator();
 		while(iter.hasNext()) {
+			
 			GameObject obj = iter.getNext();
-			if(obj instanceof NonPlayerShip ) {
-				if(((Ship) obj).getMissileCount() > 0) {
-					gameObjects.add(new Missiles((NonPlayerShip) obj));
-					System.out.println("Non-Player ship fired missile");
-					System.out.println(((Ship) obj).getMissileCount() + " missiles left");
-					this.setChanged();
-					this.notifyObservers(new GameWorldProxy(this));
+			//If obj is a Playership with MissileLauncher and ammo  then fire
+			if(obj instanceof PlayerShip ) {
+				if(((PlayerShip) obj).getMl() != null){
+					if(((PlayerShip) obj).getMissileCount() > 0) {
+						gameObjects.add(new Missiles((PlayerShip) obj));
+						System.out.println("Player ship fired missile");
+						System.out.println(((PlayerShip) obj).getMissileCount() + " missiles left");
+						this.setChanged();
+						this.notifyObservers(new GameWorldProxy(this));
+					}else {
+						System.out.println("Player ship ran out of missile");
+					}
 				}else {
-					System.out.println("Non-Player ship ran out of missile");
+					System.out.println("Unable to fire missile , Playership MissileLauncher does not exist.");
 				}
 				return;
 			}
 		}
-		//No PlayerShip
-		System.out.println("There exists no non-playership to fire missile");
+		//This line should never run 
+		System.out.println("psCount == 1 , but No Playership is found in GameObjects");
+		return;
+	}
+	
+	
+	/*
+	 * Adds Non-PlayerShip Missile to game
+	 * 	PreCondition : life is not 0 / Game is not over && NPS Exists && NPS's ML Exists && enough ammo
+	 * 	PostCondition : NPS Missile added to gameObjects and notify observers
+	 */
+	public void addNonPlayerMissile() {
+		if(GameOver) {
+			System.out.println("Unable to fire non-playership missile , GameOver already...");
+			return;
+		}	
+		if(npsCount < 1) {
+			System.out.println("Unable to fire missile , Non-Playership does not exist.");
+			return;
+		}
+		IIterator iter = gameObjects.getIterator();
+		while(iter.hasNext()) {
+			
+			GameObject obj = iter.getNext();
+			
+			if(obj instanceof NonPlayerShip ) {
+				if(((NonPlayerShip)obj).getMl() != null) {
+					if(((NonPlayerShip) obj).getMissileCount() > 0) {
+						gameObjects.add(new Missiles((NonPlayerShip) obj));
+						System.out.println("Non-Player ship fired missile");
+						System.out.println(((NonPlayerShip) obj).getMissileCount() + " missiles left");
+						this.setChanged();
+						this.notifyObservers(new GameWorldProxy(this));
+					}else {
+						System.out.println("Non-Player ship ran out of missile");
+					}
+				}else {
+					System.out.println("Unable to fire missile , Non-Playership MissileLauncher does not exist.");
+				}
+				return;
+			}
+		}
+		//This line should never run 
+		System.out.println("npsCount > 1 , but NPS is not found in GameObjects");
 		return;
 	}
 
+	
+	//TODO @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 	public void printDisplay() {
 		/*
 		for(int i = 0 ; i < gameObjects.size(); i++) {

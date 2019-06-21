@@ -46,26 +46,28 @@ public class Game extends Form{
 	private GameWorld gw;
 	private MapView mv;
 	private PointsView pv;
-	private GameWorldProxy gwProxy;
 	
 	/*
 	 * Constructor
 	 */
 	public Game() {
-		gw = GameWorld.getInstance();  //Create "Observable" 
-		gw.init();
-		gwProxy = new GameWorldProxy(gw);
+		gw = GameWorld.getInstance();  //Create "Observable" / GameWorld
+		gw.init(); //Intialize GameWorld
 		mv = new MapView(gw);    //Create "Observer"
 		pv = new PointsView(gw); //Create "Observer"
 		
 
-		gw.addObserver(mv); //Register mv 
-		gw.addObserver(pv); //Register pv 
+		gw.addObserver(mv); //Register Observer : mv
+		gw.addObserver(pv); //Register Observer : pv
 		
 		
-		//Game UI layout setup  
+		//Game Form layout setup  
 		setLayout(new BorderLayout());
 
+		
+		
+		/**********LEFTMENU BAR SETUP **********/
+		
 		
 		//Toolbar 
 		Toolbar toolBar = new Toolbar();
@@ -74,49 +76,27 @@ public class Game extends Form{
 
 		//Toolbar Menu Items 
 		CheckBox soundCheckBox = new CheckBox();
-		soundCheckBox.getAllStyles().setBgTransparency(255);
-		soundCheckBox.getUnselectedStyle().setBgColor(ColorUtil.rgb(0, 150, 150));
-		soundCheckBox.getAllStyles().setFgColor(ColorUtil.rgb(255, 255, 255));
-		soundCheckBox.getAllStyles().setPadding(TOP, 5);
-		soundCheckBox.getAllStyles().setPadding(BOTTOM, 5);
-		
-
-		
-		Button quitButton = new Button("quitButton");
-		quitButton.getAllStyles().setBgTransparency(255);
-		quitButton.getUnselectedStyle().setBgColor(ColorUtil.rgb(0, 150, 150));
-		quitButton.getAllStyles().setFgColor(ColorUtil.rgb(255, 255, 255));
-		quitButton.getAllStyles().setPadding(TOP, 5);
-		quitButton.getAllStyles().setPadding(BOTTOM, 5);
-		
-		Button aboutButton = new Button();
-		aboutButton.getAllStyles().setBgTransparency(255);
-		aboutButton.getUnselectedStyle().setBgColor(ColorUtil.rgb(0, 150, 150));
-		aboutButton.getAllStyles().setFgColor(ColorUtil.rgb(255, 255, 255));
-		aboutButton.getAllStyles().setPadding(TOP, 5);
-		aboutButton.getAllStyles().setPadding(BOTTOM, 5);
-		
-		Button newButton = new Button();
-		newButton.getAllStyles().setBgTransparency(255);
-		newButton.getUnselectedStyle().setBgColor(ColorUtil.rgb(0, 150, 150));
-		newButton.getAllStyles().setFgColor(ColorUtil.rgb(255, 255, 255));
-		newButton.getAllStyles().setPadding(TOP, 5);
-		newButton.getAllStyles().setPadding(BOTTOM, 5);
-		
+		Button quitButton = new Button();	
+		Button aboutButton = new Button();	
+		Button newButton = new Button();		
 		Button saveButton = new Button();
-		saveButton.getAllStyles().setBgTransparency(255);
-		saveButton.getUnselectedStyle().setBgColor(ColorUtil.rgb(0, 150, 150));
-		saveButton.getAllStyles().setFgColor(ColorUtil.rgb(255, 255, 255));
-		saveButton.getAllStyles().setPadding(TOP, 5);
-		saveButton.getAllStyles().setPadding(BOTTOM, 5);
-		
 		Button undoButton = new Button();
-		undoButton.getAllStyles().setBgTransparency(255);
-		undoButton.getUnselectedStyle().setBgColor(ColorUtil.rgb(0, 150, 150));
-		undoButton.getAllStyles().setFgColor(ColorUtil.rgb(255, 255, 255));
-		undoButton.getAllStyles().setPadding(TOP, 5);
-		undoButton.getAllStyles().setPadding(BOTTOM, 5);
+
+		//Make Menu Items fancy
+		soundCheckBox = applyMakeUp(soundCheckBox);
+		quitButton = applyMakeup(quitButton);
+		aboutButton = applyMakeup(aboutButton);
+		newButton = applyMakeup(newButton);
+		saveButton = applyMakeup(saveButton);
+		undoButton = applyMakeup(undoButton);
 		
+		//Disable key navigation
+		soundCheckBox.setFocusable(false);
+		quitButton.setFocusable(false);
+		aboutButton.setFocusable(false);
+		newButton.setFocusable(false);
+		saveButton.setFocusable(false);
+		undoButton.setFocusable(false);
 		
 		
 		//Command Listener for checkboxes and buttons 
@@ -128,6 +108,7 @@ public class Game extends Form{
 		undoButton.setCommand(new CommandUndo(gw));
 		
 
+		//Add components to toolbar side menu 
 		toolBar.addComponentToSideMenu(soundCheckBox);
 		toolBar.addComponentToSideMenu(quitButton);
 		toolBar.addComponentToSideMenu(aboutButton);
@@ -135,67 +116,39 @@ public class Game extends Form{
 		toolBar.addComponentToSideMenu(saveButton);
 		toolBar.addComponentToSideMenu(undoButton);
 		
-		//keybinding for side menu bar 
-		this.addKeyListener('z', quitButton.getCommand());
+		
+		/******* END OF LEFTMENU BAR SETUP ******/
+		
+		
+		
+		
+		
+		
+		/****** WEST CONTAINER SETUP  *******/
+		
+		//West Container
+		Container leftContainer = new Container(new BoxLayout(BoxLayout.Y_AXIS));
+		
+		
+		//West Container Buttons 
+		Button addAsteroidButton = new Button();
+		Button mapButton = new Button(); //DEBUG ONLY
+		Button addNPSButton = new Button();
+		Button addSpaceStationButton = new Button();
+		Button addPlayerShipButton = new Button();
+		Button playerShipFireButton = new Button();
+		Button jumpButton = new Button();
+		
+		//Make buttons fancy
+		addAsteroidButton = applyMakeup(addAsteroidButton);
+		mapButton = applyMakeup(mapButton);
+		addNPSButton = applyMakeup(addNPSButton);
+		addSpaceStationButton = applyMakeup(addSpaceStationButton);
+		addPlayerShipButton = applyMakeup(addPlayerShipButton);
+		playerShipFireButton = applyMakeup(playerShipFireButton);
+		jumpButton = applyMakeup(jumpButton);
 
-
-
-		
-		setToolbar(toolBar);
-		
-		
-		
-		//Buttons 
-		Button addAsteroidButton = new Button("newAsteroidButton");
-		addAsteroidButton.getAllStyles().setBgTransparency(255);
-		addAsteroidButton.getUnselectedStyle().setBgColor(ColorUtil.rgb(0, 150, 150));
-		addAsteroidButton.getAllStyles().setFgColor(ColorUtil.rgb(255, 255, 255));
-		addAsteroidButton.getAllStyles().setPadding(TOP, 5);
-		addAsteroidButton.getAllStyles().setPadding(BOTTOM, 5);
-		
-		
-		Button mapButton = new Button("mapButton");
-		mapButton.getAllStyles().setBgTransparency(255);
-		mapButton.getUnselectedStyle().setBgColor(ColorUtil.rgb(0, 150, 150));
-		mapButton.getAllStyles().setFgColor(ColorUtil.rgb(255, 255, 255));
-		mapButton.getAllStyles().setPadding(TOP, 5);
-		mapButton.getAllStyles().setPadding(BOTTOM, 5);
-		
-		Button addNPSButton = new Button("newNPSButton");
-		addNPSButton.getAllStyles().setBgTransparency(255);
-		addNPSButton.getUnselectedStyle().setBgColor(ColorUtil.rgb(0, 150, 150));
-		addNPSButton.getAllStyles().setFgColor(ColorUtil.rgb(255, 255, 255));
-		addNPSButton.getAllStyles().setPadding(TOP, 5);
-		addNPSButton.getAllStyles().setPadding(BOTTOM, 5);
-		
-		Button addSpaceStationButton = new Button("newSpaceStationButton");
-		addSpaceStationButton.getAllStyles().setBgTransparency(255);
-		addSpaceStationButton.getUnselectedStyle().setBgColor(ColorUtil.rgb(0, 150, 150));
-		addSpaceStationButton.getAllStyles().setFgColor(ColorUtil.rgb(255, 255, 255));
-		addSpaceStationButton.getAllStyles().setPadding(TOP, 5);
-		addSpaceStationButton.getAllStyles().setPadding(BOTTOM, 5);
-		
-		Button addPlayerShipButton = new Button("newAddPlayerShipButton");
-		addPlayerShipButton.getAllStyles().setBgTransparency(255);
-		addPlayerShipButton.getUnselectedStyle().setBgColor(ColorUtil.rgb(0, 150, 150));
-		addPlayerShipButton.getAllStyles().setFgColor(ColorUtil.rgb(255, 255, 255));
-		addPlayerShipButton.getAllStyles().setPadding(TOP, 5);
-		addPlayerShipButton.getAllStyles().setPadding(BOTTOM, 5);
-		
-		Button playerShipFireButton = new Button("PlayerShipFireButton");
-		playerShipFireButton.getAllStyles().setBgTransparency(255);
-		playerShipFireButton.getUnselectedStyle().setBgColor(ColorUtil.rgb(0, 150, 150));
-		playerShipFireButton.getAllStyles().setFgColor(ColorUtil.rgb(255, 255, 255));
-		playerShipFireButton.getAllStyles().setPadding(TOP, 5);
-		playerShipFireButton.getAllStyles().setPadding(BOTTOM, 5);
-		
-		Button jumpButton = new Button("JumpButton");
-		jumpButton.getAllStyles().setBgTransparency(255);
-		jumpButton.getUnselectedStyle().setBgColor(ColorUtil.rgb(0, 150, 150));
-		jumpButton.getAllStyles().setFgColor(ColorUtil.rgb(255, 255, 255));
-		jumpButton.getAllStyles().setPadding(TOP, 5);
-		jumpButton.getAllStyles().setPadding(BOTTOM, 5);
-		
+		//Disable arrow key navigation for buttons
 		addAsteroidButton.setFocusable(false);
 		addNPSButton.setFocusable(false);
 		addSpaceStationButton.setFocusable(false);
@@ -203,11 +156,7 @@ public class Game extends Form{
 		jumpButton.setFocusable(false);
 		playerShipFireButton.setFocusable(false);
 		
-	
-		//Command Container 
-		Container leftContainer = new Container(new BoxLayout(BoxLayout.Y_AXIS));
-		
-
+		//Set commands for buttons
 		addAsteroidButton.setCommand(new CommandAddAsteroid(gw));
 		mapButton.setCommand(new CommandPrintMap(gw));
 		addNPSButton.setCommand(new CommandAddNonPlayerShip(gw));
@@ -217,9 +166,25 @@ public class Game extends Form{
 		jumpButton.setCommand(new CommandJump(gw));
 
 
+		//Add components to West Container
+		leftContainer.add(addAsteroidButton);
+		leftContainer.add(addNPSButton);
+		leftContainer.add(addSpaceStationButton);
+		leftContainer.add(addPlayerShipButton);
+		leftContainer.add(playerShipFireButton);
+		leftContainer.add(jumpButton);
 		
-		addKeyListener('m', mapButton.getCommand());
 		
+		/****** END OF WEST CONTAINER SETUP  *******/
+		
+		
+		
+		
+		
+		
+		
+		//Key Bindings
+		addKeyListener('m', mapButton.getCommand()); //DEBUG ONLY
 		addKeyListener('i', new CommandIncreasePlayerShipSpeed(gw));
 		addKeyListener(-91 , new CommandIncreasePlayerShipSpeed(gw)); //Up arrow 
 		addKeyListener('d', new CommandDecreasePlayerShipSpeed(gw)); 
@@ -242,39 +207,41 @@ public class Game extends Form{
 		addKeyListener('x', new CommandKillAsteroidByAsteroid(gw));
 		addKeyListener('I', new CommandKillNonPlayerShipByAsteroid(gw));
 		addKeyListener('t', new CommandTick(gw));
-		
-		
-		leftContainer.add(addAsteroidButton);
-		leftContainer.add(addNPSButton);
-		leftContainer.add(addSpaceStationButton);
-		leftContainer.add(addPlayerShipButton);
-		leftContainer.add(playerShipFireButton);
-		leftContainer.add(jumpButton);
-		
-		//leftContainer.add(mapButton);
-		
-		
-		
+		this.addKeyListener('z', quitButton.getCommand()); //QUIT
 		
 
-		
-		
-		
-		
-		
-		//Add everything to content pane 
-		
-		//leftContainer.setFocusable(false);
-		this.setFocusable(false);
 
+		
+		/*
+		 * Add all container to contentpane
+		 */
 		add(BorderLayout.WEST, leftContainer);
 		add(BorderLayout.NORTH , pv);
 		add(BorderLayout.CENTER,mv);
 
 		
-		
 		this.show();
 		
+	}
+	
+	
+	
+	private Button applyMakeup(Button obj) {
+		obj.getAllStyles().setBgTransparency(255);
+		obj.getUnselectedStyle().setBgColor(ColorUtil.rgb(0, 150, 150));
+		obj.getAllStyles().setFgColor(ColorUtil.rgb(255, 255, 255));
+		obj.getAllStyles().setPadding(TOP, 5);
+		obj.getAllStyles().setPadding(BOTTOM, 5);
+		return obj;
+	}
+	
+	private CheckBox applyMakeUp(CheckBox obj) {
+		obj.getAllStyles().setBgTransparency(255);
+		obj.getUnselectedStyle().setBgColor(ColorUtil.rgb(0, 150, 150));
+		obj.getAllStyles().setFgColor(ColorUtil.rgb(255, 255, 255));
+		obj.getAllStyles().setPadding(TOP, 5);
+		obj.getAllStyles().setPadding(BOTTOM, 5);
+		return obj;
 	}
 	
 }

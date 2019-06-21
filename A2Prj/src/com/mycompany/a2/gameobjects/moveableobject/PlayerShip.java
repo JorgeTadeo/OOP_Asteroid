@@ -14,8 +14,10 @@ public class PlayerShip extends Ship implements ISteerable{
 		ml = new MissileLauncher(ps , this.getSpeed(),this.getDirection(), x, y);
 		setMaxMissileCount(10);
 		setMissileCount(10);
-		System.out.println(this.toString()); //DEBUG LINE
+		dead = false;
+		//System.out.println(this.toString()); //DEBUG LINE
 	}
+	//TODO Update getInstance with no psCount , Use dead flag instead
 	public static PlayerShip getInstance(int psCount) {
 		if(ps == null) {
 			synchronized (PlayerShip.class) {
@@ -24,43 +26,23 @@ public class PlayerShip extends Ship implements ISteerable{
 					System.out.println("Added Playership");
 			}
 		}else {
-			if(psCount == 1) {
-				System.out.println("PlayerShip Already Exists...");
-			}else {
-				ps.setLife(3);
-				System.out.println("Added Playership");
-			}
+			ps.setLife(3);
+			dead = false;
+			System.out.println("Added Playership");	
 		}
 		return ps;
 	}
 	
-	/* >>> IGNORE <<<
-	 * public static PlayerShip getInstance() {
-		if(ps == null) {
-			synchronized (PlayerShip.class) {
-				if(ps == null)
-					ps = new PlayerShip();
-					System.out.println("Added Playership");
-			}
-		}else {
-			if(ps.getLife()  != 0) {
-				System.out.println("PlayerShip Already Exists...");
-			}else {
-				ps.setLife(3);
-				System.out.println("Added Playership");
-			}
-		}
-		return ps;
+	public static boolean isDead() {
+		return dead;
 	}
-	*/
-	 
-	
-	
+
 	final static int x = 512;
 	final static int y = 384;
 	final static int MAX_SPEED = 20;
 	
 	private int life;
+	private static boolean dead;
 	private MissileLauncher ml;
 	
 

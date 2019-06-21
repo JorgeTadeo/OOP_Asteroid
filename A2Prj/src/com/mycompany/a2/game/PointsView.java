@@ -11,6 +11,7 @@ import com.codename1.ui.layouts.BoxLayout;
 
 /*
  * 1 of 2 Observer that observes GameWorld
+ * This is NORTH region of the game
  */
 public class PointsView extends Container implements Observer {
 
@@ -21,7 +22,6 @@ public class PointsView extends Container implements Observer {
 	private Label missileValueLabel;
 	private Label gameTickValueLabel;
 	private Label lifeValueLabel;
-	private GameWorld gw;
 	private Label soundValueLabel;
 	
 	
@@ -29,6 +29,10 @@ public class PointsView extends Container implements Observer {
 	 * Constructor
 	 */
 	public PointsView(GameWorld myGW) {
+		
+		//Set layout 
+		setLayout(new BoxLayout(BoxLayout.X_AXIS));
+		
 		
 		// Points Label setup
 		Label pointsTextLabel = new Label("Points:"); 	
@@ -55,24 +59,18 @@ public class PointsView extends Container implements Observer {
 		soundTextLabel.getAllStyles().setFgColor(ColorUtil.rgb(0,0,255)); 
 		soundValueLabel = new Label("OFF");
 		
-		//Adding a container with Box Layout 
-		Container myContainer = new Container();
-		myContainer.setLayout(new BoxLayout(BoxLayout.X_AXIS));
 		
-		//Add labels to container 
-		myContainer.add(pointsTextLabel);
-		myContainer.add(pointsValueLabel);
-		myContainer.add(numMissileTextLabel);
-		myContainer.add(missileValueLabel);
-		myContainer.add(gameTickTextLabel);
-		myContainer.add(gameTickValueLabel);
-		myContainer.add(lifeTextLabel);
-		myContainer.add(lifeValueLabel);
-		myContainer.add(soundTextLabel);
-		myContainer.add(soundValueLabel);
-		
-		//Add container to PointsView content pane
-		this.add(myContainer);
+		//Add components to container
+		add(pointsTextLabel);
+		add(pointsValueLabel);
+		add(numMissileTextLabel);
+		add(missileValueLabel);
+		add(gameTickTextLabel);
+		add(gameTickValueLabel);
+		add(lifeTextLabel);
+		add(lifeValueLabel);
+		add(soundTextLabel);
+		add(soundValueLabel);
 	}
 	
 	
@@ -81,7 +79,10 @@ public class PointsView extends Container implements Observer {
 	
 	@Override
 	public void update(Observable observable, Object data) { //data is proxy , observable is real gw 
-		//TODO Update playerscore , timer .. and other pointView related data
+		
+		/*
+		 * Updates playerscore,PSMissileCount,GameTime,LifeCount to PointsView
+		 */
 		IGameWorld gw = (IGameWorld) data;
 		this.pointsValueLabel.setText("" + gw.getPlayerScore());
 		this.missileValueLabel.setText("" + gw.getPSMissileCount());
@@ -93,8 +94,7 @@ public class PointsView extends Container implements Observer {
 		}else {
 			this.soundValueLabel.setText("OFF");
 		}
-		
-		//System.out.println("PointView Updated...");
+
 		this.repaint();
 	}
 
