@@ -57,12 +57,17 @@ public class SpaceCollection  implements ICollection{
 		}
 
 		@Override
-		public GameObject peekNext() {
+		public GameObject peek() {
 			// TODO Auto-generated method stub
 			return gameObjects.get(pos);
 		}
 
-		@Override
+		/**
+		 * 
+		 * @Override gets the index to access the current element pointed by index.
+		 * @return index pointer to current element
+		 */
+		
 		public int getCurrIndex() {
 			// TODO Auto-generated method stub
 			return pos;
