@@ -104,7 +104,7 @@ public class GameWorld extends Observable implements IGameWorld{
 				return ((PlayerShip)obj).getMissileCount();
 			}
 		}
-		System.out.println("There exists no playership , returned 0");
+		//System.out.println("There exists no playership , returned 0");
 		return 0;
 	}
 	
@@ -570,14 +570,16 @@ public class GameWorld extends Observable implements IGameWorld{
                   				iter.remove(psIndex);
                   				psCount = 0;
                             	System.out.println("PlayerShip was destroyed by NPS's Missile");
+                            	if(this.getLife() == 0) GameOver = true;
                         		this.setChanged();
                         		this.notifyObservers(new GameWorldProxy(this));
-                            	return;
                         	}else {
                         		iter2.remove(psIndex);
+                        		GameOver = true;
                         		System.out.println("Game Over");
-                        		return;
                         	}
+                  			((PlayerShip) obj).setDead(true);
+                  			return;
                   		}
             		}
                 }
@@ -607,6 +609,7 @@ public class GameWorld extends Observable implements IGameWorld{
 		            		iter.remove(psIndex);
 		            		psCount = 0;
 		                	System.out.println("Playership is destroyed by Asteroid. Life decreased by 1");
+		                	if(this.getLife() == 0) GameOver = true;
 		            		this.setChanged();
 		            		this.notifyObservers(new GameWorldProxy(this));
 		            	}else {
@@ -615,8 +618,10 @@ public class GameWorld extends Observable implements IGameWorld{
 		            		psCount = 0;
 		            		this.setChanged();
 		            		this.notifyObservers(new GameWorldProxy(this));
+		            		GameOver = true;
 		            		System.out.println("Game Over");
 		            	}
+		            	((PlayerShip) obj).setDead(true);
 		                break;
 		            }
 			}
@@ -659,6 +664,7 @@ public class GameWorld extends Observable implements IGameWorld{
 	            		iter.remove(psIndex);
 	            		psCount = 0;
 	                	System.out.println("Playership is destroyed by NonPlayerShip. Life decreased by 1");
+	                	if(this.getLife() == 0) GameOver = true;
 	            		this.setChanged();
 	            		this.notifyObservers(new GameWorldProxy(this));
 	            	}else {
@@ -667,8 +673,10 @@ public class GameWorld extends Observable implements IGameWorld{
 	            		psCount = 0;
 	            		this.setChanged();
 	            		this.notifyObservers(new GameWorldProxy(this));
+	            		GameOver = true;
 	            		System.out.println("Game Over");
 	            	}
+	            	((PlayerShip) obj).setDead(true);
 	                break;
 	            }
 			}
