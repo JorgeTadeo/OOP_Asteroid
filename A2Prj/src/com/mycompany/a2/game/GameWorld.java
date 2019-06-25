@@ -130,31 +130,35 @@ public class GameWorld extends Observable implements IGameWorld{
 	 * 	PostCondition : game timer increments by 1 tick. All gameObject should reflect changes.
 	 */
 	public void tick() {
-		
-		IIterator iter = gameObjects.getIterator();
+		boolean moreMissile = true;
+		while(moreMissile) {
+			moreMissile = false;
+			IIterator iter = gameObjects.getIterator();
 	
-		while(iter.hasNext()) {
-			
-			int ptr = iter.getCurrIndex();
-			GameObject obj = iter.getNext();
-			
-			//If is a missile with 1 fuel left
-			if(obj instanceof Missiles && ((Missiles) obj).getFuel() == 1 ) {
-				iter.remove(ptr);
-				System.out.println("Missile out of fuel and is removed");
-			//If is a missile with more than 1 fuel left
-			}else if(obj instanceof Missiles && ((Missiles) obj).getFuel() != 1) {
-				((Missiles) obj).decrementFuel();
-			//If is a moveable object
-			}else if(!(obj instanceof FixedObject)) {
-				((MoveableObject) obj).move();
-			//Not a moveable object , no change.
-			}else {
-				continue;
-			}
-			this.setChanged();
-			this.notifyObservers(new GameWorldProxy(this));
-		}//END WHILE 
+			while(iter.hasNext()) {
+				
+				int ptr = iter.getCurrIndex();
+				GameObject obj = iter.getNext();
+				
+				//If is a missile with 1 fuel left
+				if(obj instanceof Missiles && ((Missiles) obj).getFuel() == 1 ) {
+					iter.remove(ptr);
+					System.out.println("Missile out of fuel and is removed");
+					moreMissile = true;
+				//If is a missile with more than 1 fuel left
+				}else if(obj instanceof Missiles && ((Missiles) obj).getFuel() != 1) {
+					((Missiles) obj).decrementFuel();
+				//If is a moveable object
+				}else if(!(obj instanceof FixedObject)) {
+					((MoveableObject) obj).move();
+				//Not a moveable object , no change.
+				}else {
+					continue;
+				}
+				this.setChanged();
+				this.notifyObservers(new GameWorldProxy(this));
+			}//END WHILE 
+		}
 		
 		timer++;
 	}
