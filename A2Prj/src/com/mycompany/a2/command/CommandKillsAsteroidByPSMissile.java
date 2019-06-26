@@ -15,7 +15,7 @@ public class CommandKillsAsteroidByPSMissile extends Command {
 	}
 	
 	public void actionPerformed(ActionEvent e) {
-		gw.killAsteroid();
+		gw.killAsteroidByMissile();
 	}
 	
 	

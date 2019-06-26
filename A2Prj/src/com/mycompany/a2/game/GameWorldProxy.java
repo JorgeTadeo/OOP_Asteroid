@@ -72,8 +72,8 @@ public class GameWorldProxy extends Observable implements IGameWorld {
 	}
 
 	@Override
-	public void killAsteroid() {
-		gw.killAsteroid();
+	public void killAsteroidByMissile() {
+		gw.killAsteroidByMissile();
 	}
 
 	@Override

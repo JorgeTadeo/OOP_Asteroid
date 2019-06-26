@@ -21,7 +21,7 @@ public interface IGameWorld {
 	void turnMissileLauncherLeft();
 	void turnMissileLauncherRight();
 	void playerShipReload();
-	void killAsteroid();
+	void killAsteroidByMissile();
 	void killNonPlayerShipByMissile();
 	void killPlayerShipByMissile();
 	void killPlayerShipByAsteroid();

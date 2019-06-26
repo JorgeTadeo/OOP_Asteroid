@@ -23,6 +23,7 @@ public class PlayerShip extends Ship implements ISteerable{
 			synchronized (PlayerShip.class) {
 				if(ps == null)
 					ps = new PlayerShip();
+					dead = false;
 					System.out.println("Added Playership");
 			}
 		}else {
@@ -42,7 +43,7 @@ public class PlayerShip extends Ship implements ISteerable{
 	final static int MAX_SPEED = 20;
 	
 	private int life;
-	private static boolean dead;
+	private static boolean dead = true;
 	private MissileLauncher ml;
 	
 
@@ -76,6 +77,7 @@ public class PlayerShip extends Ship implements ISteerable{
 		life = x;
 	}
 	
+	//NOT USED
 	public void respawn() {
 		this.setX(x);
 		this.setY(y);
@@ -83,6 +85,10 @@ public class PlayerShip extends Ship implements ISteerable{
 		this.setSpeed(0);
 		this.reload();
 		life--;
+	}
+	
+	public void setDead(boolean d) {
+		this.dead = d;
 	}
 	
 	
