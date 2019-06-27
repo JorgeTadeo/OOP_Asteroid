@@ -51,6 +51,9 @@ public class MapView extends Container implements Observer{
 	public void setMapViewHeight(int height) { this.mapViewHeight = height; }
 	
 	
+	/**
+	 * Description: Draw each object to mapview.
+	 */
 	@Override
 	public void update(Observable observable, Object data) {
 		
