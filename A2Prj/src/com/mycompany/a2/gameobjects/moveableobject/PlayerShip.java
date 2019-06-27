@@ -141,7 +141,7 @@ public class PlayerShip extends Ship implements ISteerable{
 		// TODO Auto-generated method stub
 		int x = (int)this.getX() + (int)origin.getX();
 		int y = (int)this.getY() + (int)origin.getY();
-		g.setColor(ColorUtil.BLACK);
+		g.setColor(color);
 		g.fillRect(x , y , 150 , 150);
 		
 	}
