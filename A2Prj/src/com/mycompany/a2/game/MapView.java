@@ -5,6 +5,7 @@ import java.util.Observer;
 
 import com.codename1.charts.util.ColorUtil;
 import com.codename1.ui.Container;
+import com.codename1.ui.Slider;
 import com.codename1.ui.TextArea;
 import com.mycompany.a2.gameobjects.IIterator;
 
@@ -31,9 +32,12 @@ public class MapView extends Container implements Observer{
 		
 		//Add Component to Container
 		mapValueTextArea = new TextArea();
-		this.add(mapValueTextArea);
 		mapValueTextArea.setEditable(false);
 		mapValueTextArea.setFocusable(false);
+	
+		this.add(mapValueTextArea);
+		
+		
 
 	}
 	
