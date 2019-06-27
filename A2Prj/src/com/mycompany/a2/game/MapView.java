@@ -65,7 +65,7 @@ public class MapView extends Container implements Observer{
 		
 		IIterator iter = gw.getGameObjectIterator();
 		while(iter.hasNext()) {
-			mapValueTextArea.setText(mapValueTextArea.getText() + "\n" + iter.getNext());
+			//mapValueTextArea.setText(mapValueTextArea.getText() + "\n" + iter.getNext());
 		}
 		
 		

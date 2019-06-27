@@ -1,6 +1,8 @@
 package com.mycompany.a2.gameobjects.moveableobject;
 
+import com.codename1.charts.models.Point;
 import com.codename1.charts.util.ColorUtil;
+import com.codename1.ui.Graphics;
 
 public class MissileLauncher extends MoveableObject implements ISteerable , IMoveable{
 
@@ -50,6 +52,12 @@ public class MissileLauncher extends MoveableObject implements ISteerable , IMov
 	@Override
 	public void move(){
 		this.setLocation(owner.getX(), owner.getY());
+	}
+
+	@Override
+	public void draw(Graphics g, Point offsetRelToParent) {
+		// TODO Auto-generated method stub
+		System.out.println("TODO PS's ML");
 	}
 
 }

@@ -7,6 +7,7 @@ import com.codename1.charts.util.ColorUtil;
 import com.codename1.ui.Container;
 import com.codename1.ui.Label;
 import com.codename1.ui.layouts.BoxLayout;
+import com.mycompany.a2.sound.BGSound;
 
 
 /*
@@ -23,7 +24,8 @@ public class PointsView extends Container implements Observer {
 	private Label gameTickValueLabel;
 	private Label lifeValueLabel;
 	private Label soundValueLabel;
-	
+	private boolean sound = false;
+	BGSound bgm;
 	
 	/*
 	 * Constructor
@@ -59,6 +61,8 @@ public class PointsView extends Container implements Observer {
 		soundTextLabel.getAllStyles().setFgColor(ColorUtil.rgb(0,0,255)); 
 		soundValueLabel = new Label("OFF");
 		
+		bgm = new BGSound("bgm.mp3");
+		
 		
 		//Add components to container
 		add(pointsTextLabel);
@@ -89,13 +93,23 @@ public class PointsView extends Container implements Observer {
 		this.gameTickValueLabel.setText("" + gw.getGameTime());
 		this.lifeValueLabel.setText("" + gw.getLife());
 		
-		if(gw.getSound() == true) {
-			this.soundValueLabel.setText("ON");
-		}else {
-			this.soundValueLabel.setText("OFF");
+		//If sound flag dont match
+		if(gw.getSound() != this.sound) {
+			if(gw.getSound() == true) {
+				this.soundValueLabel.setText("ON");
+				this.sound = true;
+				//new BGSound("bgm.mp3").play();
+				bgm.play();
+				System.out.println("Sound ON");
+				
+			}else {
+				this.soundValueLabel.setText("OFF");
+				this.sound = false;
+				bgm.pause();
+			}
 		}
 
-		this.repaint();
+		this.repaint(); //Redraw PointsView
 	}
 
 }

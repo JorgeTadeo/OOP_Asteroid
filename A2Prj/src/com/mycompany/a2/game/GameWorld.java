@@ -10,6 +10,7 @@ import com.mycompany.a2.gameobjects.moveableobject.Missiles;
 import com.mycompany.a2.gameobjects.moveableobject.MoveableObject;
 import com.mycompany.a2.gameobjects.moveableobject.PlayerShip;
 import com.mycompany.a2.gameobjects.moveableobject.Ship;
+import com.mycompany.a2.sound.BGSound;
 import com.mycompany.a2.game.GameWorld;
 import com.mycompany.a2.gameobjects.GameObject;
 import com.mycompany.a2.gameobjects.IIterator;
@@ -37,6 +38,7 @@ public class GameWorld extends Observable implements IGameWorld{
 	private boolean soundOn;
 	private int life;
 	private boolean GameOver;
+	private BGSound bgm;
 	
 	/**
 	 * Constructor
@@ -69,6 +71,7 @@ public class GameWorld extends Observable implements IGameWorld{
 		soundOn = false;
 		life = 3;
 		GameOver = false;
+		bgm = new BGSound("bgm.mp3");
 	}
 	
 	
@@ -116,7 +119,9 @@ public class GameWorld extends Observable implements IGameWorld{
 		return gameObjects.getIterator();
 	}
 	
+	
 
+	
 	
 	
 	/********************

@@ -4,8 +4,9 @@ import java.util.Random;
 
 import com.codename1.charts.util.ColorUtil;
 import com.codename1.ui.geom.Point2D;
+import com.mycompany.a2.graphics.IDrawable;
 
-public abstract class GameObject {
+public abstract class GameObject implements IDrawable {
 
 	private Point2D coord;
 	protected int color;
