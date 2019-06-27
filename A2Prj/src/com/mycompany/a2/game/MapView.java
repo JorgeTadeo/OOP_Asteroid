@@ -1,12 +1,18 @@
 package com.mycompany.a2.game;
 
+import java.util.Iterator;
 import java.util.Observable;
 import java.util.Observer;
 
+import com.codename1.charts.models.Point;
 import com.codename1.charts.util.ColorUtil;
 import com.codename1.ui.Container;
+import com.codename1.ui.Graphics;
+import com.codename1.ui.Slider;
 import com.codename1.ui.TextArea;
+import com.mycompany.a2.gameobjects.GameObject;
 import com.mycompany.a2.gameobjects.IIterator;
+import com.mycompany.a2.gameobjects.moveableobject.PlayerShip;
 
 /*
  * 1 of 2 Observer that observes GameWorld
@@ -19,7 +25,7 @@ public class MapView extends Container implements Observer{
 	private int mapViewWidth;
 	
 	private TextArea mapValueTextArea;
-	
+	private IGameWorld gw;
 	
 	/*
 	 * Constructor
@@ -28,12 +34,16 @@ public class MapView extends Container implements Observer{
 		this.mapViewHeight = this.getHeight();
 		this.mapViewWidth = this.getWidth();
 		this.getAllStyles().setFgColor(ColorUtil.rgb(0, 0, 255));
-		
+		/*
 		//Add Component to Container
 		mapValueTextArea = new TextArea();
-		this.add(mapValueTextArea);
 		mapValueTextArea.setEditable(false);
 		mapValueTextArea.setFocusable(false);
+	
+		this.add(mapValueTextArea);
+		*/
+		
+		
 
 	}
 	
@@ -56,20 +66,44 @@ public class MapView extends Container implements Observer{
 		/*
 		 * Prints all gameObject using GameObjectIterator to textArea
 		 */
+		/* OLD 
 		IGameWorld gw = (IGameWorld) data;
 		mapValueTextArea.setText("");
 		
 		IIterator iter = gw.getGameObjectIterator();
 		while(iter.hasNext()) {
-			mapValueTextArea.setText(mapValueTextArea.getText() + "\n" + iter.getNext());
+			//mapValueTextArea.setText(mapValueTextArea.getText() + "\n" + iter.getNext());
 		}
+		*/
 		
-		
+		/*
+		 * NEW
+		 */
+		this.gw = (IGameWorld) data;
 		this.repaint();
 		
 	
 	}
-
+	
+	
+	@Override
+	public void paint(Graphics g) {
+		super.paint(g);
+		Point mapViewOrigin = new Point(getX(),getY());
+		//System.out.println("In Mapview.paint()");
+	//	System.out.println(this.getWidth()  + " , " + this.getHeight());
+		if(gw != null) {
+			IIterator iter = gw.getGameObjectIterator();
+			while(iter.hasNext()) {
+				GameObject obj = iter.getNext();
+				if(obj instanceof PlayerShip) {
+					obj.draw(g, mapViewOrigin);
+				}
+			}
+		}
+		g.fillRect(getX()+10, getY()+10, 200, 200);
+		
+	}
 	
 
 }

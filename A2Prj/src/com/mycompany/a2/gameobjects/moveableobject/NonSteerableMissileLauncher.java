@@ -1,5 +1,8 @@
 package com.mycompany.a2.gameobjects.moveableobject;
 
+import com.codename1.charts.models.Point;
+import com.codename1.ui.Graphics;
+
 public class NonSteerableMissileLauncher extends MoveableObject implements IMoveable{
 
 	private NonPlayerShip owner;
@@ -12,6 +15,12 @@ public class NonSteerableMissileLauncher extends MoveableObject implements IMove
 	@Override
 	public void move() {
 		this.setLocation(owner.getX(), owner.getY());	
+	}
+
+	@Override
+	public void draw(Graphics g, Point offsetRelToParent) {
+		// TODO Auto-generated method stub
+		System.out.println("TODO draw NPS ML");
 	}
 
 

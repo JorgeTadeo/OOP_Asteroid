@@ -1,6 +1,8 @@
 package com.mycompany.a2.gameobjects.moveableobject;
 
+import com.codename1.charts.models.Point;
 import com.codename1.charts.util.ColorUtil;
+import com.codename1.ui.Graphics;
 import com.mycompany.a2.game.GameWorld;
 
 @SuppressWarnings("unused")
@@ -134,6 +136,15 @@ public class PlayerShip extends Ship implements ISteerable{
 		this.setLocation(newX, newY);
 	}
 	*/
+	@Override
+	public void draw(Graphics g, Point origin) {
+		// TODO Auto-generated method stub
+		int x = (int)this.getX() + (int)origin.getX();
+		int y = (int)this.getY() + (int)origin.getY();
+		g.setColor(color);
+		g.fillRect(x , y , 150 , 150);
+		
+	}
 	
 
 }

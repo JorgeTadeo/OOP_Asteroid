@@ -1,6 +1,8 @@
 package com.mycompany.a2.gameobjects.moveableobject;
 
+import com.codename1.charts.models.Point;
 import com.codename1.charts.util.ColorUtil;
+import com.codename1.ui.Graphics;
 
 public class Missiles extends MoveableObject implements IMoveable{
 
@@ -61,6 +63,11 @@ public class Missiles extends MoveableObject implements IMoveable{
 				);	
 		}
 			
+	}
+	@Override
+	public void draw(Graphics g, Point offsetRelToParent) {
+		// TODO Auto-generated method stub
+		System.out.println("TODO draw Missile");
 	}
 
 }

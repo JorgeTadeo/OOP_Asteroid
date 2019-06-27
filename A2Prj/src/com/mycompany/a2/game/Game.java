@@ -8,6 +8,7 @@ import com.codename1.ui.Form;
 import com.codename1.ui.Toolbar;
 import com.codename1.ui.layouts.BorderLayout;
 import com.codename1.ui.layouts.BoxLayout;
+import com.codename1.ui.util.UITimer;
 import com.mycompany.a2.command.CommandAbout;
 import com.mycompany.a2.command.CommandAddAsteroid;
 import com.mycompany.a2.command.CommandAddNonPlayerShip;
@@ -38,7 +39,7 @@ import com.mycompany.a2.command.CommandTurnPlayerShipLeft;
 import com.mycompany.a2.command.CommandTurnPlayerShipRight;
 import com.mycompany.a2.command.CommandUndo;
 
-public class Game extends Form{
+public class Game extends Form implements Runnable{
 
 	/*
 	 * Fields 
@@ -46,6 +47,8 @@ public class Game extends Form{
 	private GameWorld gw;
 	private MapView mv;
 	private PointsView pv;
+	
+	UITimer timer = new UITimer(this);
 	
 	/*
 	 * Constructor
@@ -60,6 +63,7 @@ public class Game extends Form{
 		gw.addObserver(mv); //Register Observer : mv
 		gw.addObserver(pv); //Register Observer : pv
 		
+		timer.schedule(1000,true,this);
 		
 		//Game Form layout setup  
 		setLayout(new BorderLayout());
@@ -73,6 +77,7 @@ public class Game extends Form{
 		Toolbar toolBar = new Toolbar();
 		Toolbar.setOnTopSideMenu(false);
 		setToolbar(toolBar);
+		toolBar.setTitle("Asteroid Game");
 
 		//Toolbar Menu Items 
 		CheckBox soundCheckBox = new CheckBox();
@@ -210,7 +215,6 @@ public class Game extends Form{
 		this.addKeyListener('z', quitButton.getCommand()); //QUIT
 		
 
-
 		
 		/*
 		 * Add all container to contentpane
@@ -220,7 +224,16 @@ public class Game extends Form{
 		add(BorderLayout.CENTER,mv);
 
 		
+		
 		this.show();
+		
+		
+		System.out.println("Game GUI Setup Completed with the following stats :");
+		
+		System.out.println("Form Content pane size : " + this.getWidth() + "," + this.getHeight());
+		System.out.println("MapView size : " + mv.getWidth() + "," + mv.getHeight());
+		System.out.println("MapView Origin : " + mv.getX() + "," + mv.getY());
+		
 		
 	}
 	
@@ -242,6 +255,17 @@ public class Game extends Form{
 		obj.getAllStyles().setPadding(TOP, 5);
 		obj.getAllStyles().setPadding(BOTTOM, 5);
 		return obj;
+	}
+
+
+	/**
+	 * Invoke when timer ticks
+	 */
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		gw.tick();
+		
 	}
 	
 }

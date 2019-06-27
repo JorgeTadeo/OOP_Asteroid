@@ -2,7 +2,9 @@ package com.mycompany.a2.gameobjects.fixedobject;
 
 import java.util.Random;
 
+import com.codename1.charts.models.Point;
 import com.codename1.charts.util.ColorUtil;
+import com.codename1.ui.Graphics;
 
 public class SpaceStation extends FixedObject {
 
@@ -41,6 +43,12 @@ public class SpaceStation extends FixedObject {
 			" color=" + this.getColorToString() +
 			" rate=" + this.getBlinkRate()
 		);				
+	}
+
+	@Override
+	public void draw(Graphics g, Point offsetRelToParent) {
+		// TODO Auto-generated method stub
+		System.out.println("TODO Draw SpaceStation");
 	}
 
 }
