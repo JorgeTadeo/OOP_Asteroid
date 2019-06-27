@@ -155,17 +155,19 @@ public class GameWorld extends Observable implements IGameWorld{
 					((Missiles) obj).decrementFuel();
 				//If is a moveable object
 				}else if(!(obj instanceof FixedObject)) {
+					//System.out.println("ticking moveable");
 					((MoveableObject) obj).move();
 				//Not a moveable object , no change.
 				}else {
 					continue;
 				}
-				this.setChanged();
-				this.notifyObservers(new GameWorldProxy(this));
 			}//END WHILE 
 		}
 		
 		timer++;
+		this.setChanged();
+		this.notifyObservers(new GameWorldProxy(this));
+	//	System.out.println("Ticked :" + timer);
 	}
 	
 	

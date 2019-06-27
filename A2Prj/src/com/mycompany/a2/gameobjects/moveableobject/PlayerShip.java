@@ -137,9 +137,13 @@ public class PlayerShip extends Ship implements ISteerable{
 	}
 	*/
 	@Override
-	public void draw(Graphics g, Point offsetRelToParent) {
+	public void draw(Graphics g, Point origin) {
 		// TODO Auto-generated method stub
-		System.out.println("TODO draw PS");
+		int x = (int)this.getX() + (int)origin.getX();
+		int y = (int)this.getY() + (int)origin.getY();
+		g.setColor(ColorUtil.BLACK);
+		g.fillRect(x , y , 150 , 150);
+		
 	}
 	
 
