@@ -101,7 +101,7 @@ public class MapView extends Container implements Observer{
 				}
 			}
 		}
-		g.fillRect(getX()+10, getY()+10, 200, 200);
+	//	g.fillRect(getX()+10, getY()+10, 200, 200);
 		
 	}
 	

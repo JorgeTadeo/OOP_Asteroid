@@ -90,7 +90,7 @@ public class PlayerShip extends Ship implements ISteerable{
 	}
 	
 	public void setDead(boolean d) {
-		this.dead = d;
+		PlayerShip.dead = d;
 	}
 	
 	
