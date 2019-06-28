@@ -16,14 +16,14 @@ public class CommandAddAsteroid extends Command {
 	private IGameWorld gw;
 	/**
 	 * 
-	 * @param gw : 
+	 * @param gw : input gw
 	 */
 	public CommandAddAsteroid(IGameWorld gw) {
 		super("+ Asteroid");
 		this.gw = gw;
 	}
 	/**
-	 * 
+	 * @param av : input e
 	 */
 	public void actionPerformed(ActionEvent e) {
 		gw.addAsteroid();
